@@ -19,14 +19,14 @@ tf.app.flags.DEFINE_string('training_gt_dir_ic17', '', 'ic15 training dataset gr
 tf.app.flags.DEFINE_string('training_gt_dir_ic15', '', 'ic17 training dataset ground-truth to use')
 """
 
-tf.app.flags.DEFINE_string('training_data_dir', default='/home/qz/data/ICDAR_13_15_17/images/', help='training images dir')
-tf.app.flags.DEFINE_string('training_gt_data_dir', default='/home/qz/data/ICDAR_13_15_17/annotations/', help='training gt dir')
+tf.app.flags.DEFINE_string('training_data_dir', default='/home/sunset/learn/AI/fots/AI/ch4_training_images/', help='training images dir')
+tf.app.flags.DEFINE_string('training_gt_data_dir', default='/home/sunset/learn/AI/fots/AI/ch4_training_localization_transcription_gt/', help='training gt dir')
 
 FLAGS = tf.app.flags.FLAGS 
 
 def generator(input_size=512, batch_size=12, random_scale=np.array([0.8, 0.85, 0.9, 0.95, 1.0, 1.1, 1.2]),):
     # data_loader = SynthTextLoader()
-    data_loader = ICDARLoader(edition='17', shuffle=True)
+    data_loader = ICDARLoader(edition='13', shuffle=True)
     # image_list = np.array(data_loader.get_images(FLAGS.training_data_dir_ic13, image_list))
     # image_list = np.array(data_loader.get_images(FLAGS.training_data_dir_ic15, image_list))
     image_list = np.array(data_loader.get_images(FLAGS.training_data_dir))

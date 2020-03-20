@@ -8,12 +8,22 @@ import tensorflow as tf
 import locality_aware_nms as nms_locality
 import lanms
 from bktree import BKTree, levenshtein, list_words
-
-tf.app.flags.DEFINE_string('test_data_path', '/home/qz/data/ICDAR15/ch4_test_images/', '')
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+from tensorflow.python.client import device_lib
+# print(device_lib.list_local_devices())
+print(tf.contrib.eager.num_gpus())
+tf.app.flags.DEFINE_string('test_data_path', '/home/sunset/learn/AI/fots/AI/ch4_training_images/', '')
+# tf.app.flags.DEFINE_string('test_data_path', '/home/sunset/learn/AI/fots/AI/ch4_test_images/', '')
 tf.app.flags.DEFINE_string('gpu_list', '0', '')
 tf.app.flags.DEFINE_string('checkpoint_path', 'checkpoints/', '')
 tf.app.flags.DEFINE_string('output_dir', 'outputs/', '')
-tf.app.flags.DEFINE_bool('no_write_images', True, 'do not write images')
+tf.app.flags.DEFINE_bool('no_write_images', False, 'do not write images')
 # tf.app.flags.DEFINE_bool('use_vacab', True, 'strong, normal or weak')
 
 from module import Backbone_branch, Recognition_branch, RoI_rotate
@@ -173,8 +183,7 @@ def bktree_search(bktree, pred_word, dist=5):
     return bktree.query(pred_word, dist)
 
 def main(argv=None):
-    import os
-    os.environ['CUDA_VISIBLE_DEVICES'] = FLAGS.gpu_list
+
     try:
         os.makedirs(FLAGS.output_dir)
     except OSError as e:

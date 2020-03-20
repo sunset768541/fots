@@ -2,19 +2,28 @@ import time
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import slim
-
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+from tensorflow.python.client import device_lib
+# print(device_lib.list_local_devices())
+print(tf.contrib.eager.num_gpus())
 tf.app.flags.DEFINE_integer('input_size', 512, '')
 tf.app.flags.DEFINE_integer('batch_size_per_gpu', 8, '')
 tf.app.flags.DEFINE_integer('num_readers', 4, '')
 tf.app.flags.DEFINE_float('learning_rate', 0.0001, '')
-tf.app.flags.DEFINE_integer('max_steps', 150001, '')
+tf.app.flags.DEFINE_integer('max_steps', 100001, '')
 tf.app.flags.DEFINE_float('moving_average_decay', 0.997, '')
 tf.app.flags.DEFINE_string('gpu_list', '1', '')
 tf.app.flags.DEFINE_string('checkpoint_path', 'checkpoints/', '')
 tf.app.flags.DEFINE_boolean('restore', False, 'whether to resotre from checkpoint')
 tf.app.flags.DEFINE_integer('save_checkpoint_steps', 1000, '')
 tf.app.flags.DEFINE_integer('save_summary_steps', 100, '')
-tf.app.flags.DEFINE_string('pretrained_model_path', "./SynthTextPretrained/", '')
+tf.app.flags.DEFINE_string('pretrained_model_path', "/home/sunset/learn/AI/fots/AI/SynthText_6_epochs/SynthText_6_epochs/", '')
 tf.app.flags.DEFINE_integer('train_stage', 2, '0-train detection only; 1-train recognition only; 2-train end-to-end; 3-train end-to-end absolutely')
 
 from data_provider import data_generator
@@ -54,8 +63,7 @@ def compute_loss(f_score, f_geometry, recognition_logits, input_score_maps, inpu
     return detection_loss, recognition_loss, model_loss
 
 def main(argv=None):
-    import os
-    os.environ['CUDA_VISIBLE_DEVICES'] = FLAGS.gpu_list
+
     if not tf.gfile.Exists(FLAGS.checkpoint_path):
         tf.gfile.MkDir(FLAGS.checkpoint_path)
     else:

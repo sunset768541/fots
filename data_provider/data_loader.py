@@ -7,7 +7,7 @@ class DataLoader(object):
 	def get_images(self, data_dir):
 		files = []
 		for ext in ['jpg', 'png', 'jpeg', 'JPG']:
-			files.extend(glob.glob(os.path.join(data_dir, '*.{}'.format(ext))))
+			files.extend(glob.glob('/home/sunset/learn/AI/fots/AI/ch4_training_images/*.jpg'))
 		return files
 
 	@abstractmethod
